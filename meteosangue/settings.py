@@ -33,6 +33,8 @@ ACCESS_TOKEN_SECRET = os.getenv('ACCESS_TOKEN_SECRET', 'D3V')
 CONSUMER_KEY = os.getenv('CONSUMER_KEY', 'D3V')
 CONSUMER_SECRET = os.getenv('CONSUMER_SECRET', 'D3V')
 
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'D3V')
+TELEGRAM_CHANNEL = os.getenv('TELEGRAM_CHANNEL', 'D3V')
 
 # Application definition
 

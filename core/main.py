@@ -12,7 +12,7 @@ from tempfile import NamedTemporaryFile
 from selenium import webdriver
 
 from .models import BloodGroup, Log
-from .utils import crs_to_date, tweet_status
+from .utils import crs_to_date, tweet_status, telegram_status
 
 """
 Method to format blood groups status

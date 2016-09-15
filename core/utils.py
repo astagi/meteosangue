@@ -1,5 +1,6 @@
 import locale
 import pytz
+import telepot
 import tweepy
 
 from django.conf import settings
@@ -31,3 +32,13 @@ def tweet_status(status, image_path=None):
         api.update_with_media(image_path, status=status)
     else:
         api.update_status(status)
+
+
+"""
+Method to post with image on Telegram
+"""
+def telegram_status(status, image_path=None):
+    bot = telepot.Bot(settings.TELEGRAM_TOKEN)
+    bot.sendMessage(settings.TELEGRAM_CHANNEL, status)
+    print (image_path)
+    bot.sendPhoto(settings.TELEGRAM_CHANNEL, open(image_path, "rb"))
