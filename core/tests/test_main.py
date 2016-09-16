@@ -85,7 +85,8 @@ class MainTest(TestCase):
 
     @mock.patch('core.main.webdriver.PhantomJS', autospec = True)
     @mock.patch('core.main.tweet_status', autospec = True)
-    def test_do_not_post_on_twitter_two_times(self, tweet_status, phantom_driver):
+    @mock.patch('core.main.telegram_status', autospec = True)
+    def test_do_not_post_on_twitter_two_times(self, telegram_status, tweet_status, phantom_driver):
         self.assertEqual(len(Log.objects.all()), 0)
         mock_body = open(os.path.join(os.path.dirname(__file__), 'data', 'crs_page.html')).read()
 
@@ -99,7 +100,8 @@ class MainTest(TestCase):
 
     @mock.patch('core.main.webdriver.PhantomJS', autospec = True)
     @mock.patch('core.main.tweet_status', autospec = True)
-    def test_retry_on_twitter_exception(self, tweet_status, phantom_driver):
+    @mock.patch('core.main.telegram_status', autospec = True)
+    def test_retry_on_twitter_exception(self, telegram_status, tweet_status, phantom_driver):
         self.assertEqual(len(Log.objects.all()), 0)
         mock_body = open(os.path.join(os.path.dirname(__file__), 'data', 'crs_page.html')).read()
 
@@ -112,3 +114,20 @@ class MainTest(TestCase):
         tweet_status.side_effect = None
         fetch_and_update()
         self.assertTrue(Log.objects.all()[0].twitter_done)
+
+    @mock.patch('core.main.webdriver.PhantomJS', autospec = True)
+    @mock.patch('core.main.tweet_status', autospec = True)
+    @mock.patch('core.main.telegram_status', autospec = True)
+    def test_retry_on_telegram_exception(self, telegram_status, tweet_status, phantom_driver):
+        self.assertEqual(len(Log.objects.all()), 0)
+        mock_body = open(os.path.join(os.path.dirname(__file__), 'data', 'crs_page.html')).read()
+
+        phantom_driver.return_value = MockPhantomJS(mock_body)
+
+        telegram_status.side_effect = Exception('Error on Twitter')
+        fetch_and_update()
+        self.assertTrue(not Log.objects.all()[0].telegram_done)
+
+        telegram_status.side_effect = None
+        fetch_and_update()
+        self.assertTrue(Log.objects.all()[0].telegram_done)

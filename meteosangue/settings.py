@@ -169,7 +169,13 @@ db_from_env = dj_database_url.config()
 if db_from_env:
     DATABASES['default'].update(db_from_env)
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+if 'test' in sys.argv:
+    try:
+        from .test_settings import *
+    except ImportError:
+        pass    
+else:
+    try:
+        from .local_settings import *
+    except ImportError:
+        pass

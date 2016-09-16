@@ -39,9 +39,16 @@ def post_blood_weather(blood_groups, log):
         try:
             tweet_status(status, os.path.join(settings.UPLOAD_METEO, log.image.name))
             log.twitter_done = True
-            log.save()
         except tweepy.TweepError as ex:
             print (ex)
+
+    if not log.telegram_done:
+        try:
+            telegram_status(status, os.path.join(settings.UPLOAD_METEO, log.image.name))
+            log.telegram_done = True
+        except Exception as ex:
+            print (ex)
+    log.save()
 
 
 """
